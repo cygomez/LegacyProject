@@ -3,8 +3,9 @@
 
 angular.module('myApp', [
   'ngRoute',
-  'ngCookies',
-  'myApp.home' 
+  'ngCookies', 
+  'myApp.home'
+
 
 ])
 

@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 <!-- Write your code during your work -->
 <!-- Before push, cut and paste everything here into yourname.html -->
-=======
-<div id="home-page" ng-controller="homeController" ng-init="getAllUsers();location=true"> 
+<div id="home-page" ng-controller="homeController" ng-init="getAllUsers();location=false;"> 
 
 
   <nav class="navbar navbar-default map-navbar row site-selection">
@@ -91,7 +89,7 @@
               <ul>
                 <p ng-show="!sitesResults.length" class="empty-list">No results found</p>
                 <li ng-repeat="elm in sitesResults | filter: siteSearch as results" class="site-list-elm" data-placeId="{{elm.place_id}}">
-                  <p class="sitename" ng-click="siteListClick($index)"> {{elm.name}} </p>
+                  <p class="sitename" ng-click="siteListClick($index)" ng-model="placeSelected"> {{elm.name}} </p>
                   <span class="user-checkins">
                     <i class="fa fa-user"></i>{{elm.checkins}}
                   </span>
@@ -104,6 +102,11 @@
                   <span type="button" class="" data-toggle="modal" data-target="#myModal{{elm.place_id}}" ng-click="">
                     reviews
                   </span>
+         
+                <!-- Create an Event Button trigger modal -->
+                <button type="button" data-toggle="modal" data-target="#myEvents{{elm.place_id}}">
+                  Create Event
+                </button>
 
                   <!-- Modal -->
                   <div class="modal fade" id="myModal{{elm.place_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -139,11 +142,42 @@
 
                   </div>
 
-                </li>
-              </ul>
-            </div>
+                <!-- Events Modal -->
+                <div class="modal fade" id="myEvents{{elm.place_id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">New Event</h4>
+                      </div>
+                      <div class="modal-body">
+                        
+                        <div>
+                          <p>Location: {{ elm.name }}</p>
+                          <form novalidate class="simple-form">
+                            <p>Sport: {{ selectedSport }}</p> <br />
+                            <div>
+                              <h4>Date:</h4><input type="text" ng-model="event.date" placeholder="mm/dd/yyyy">
+                              <h4>Time:</h4><input type="text" ng-model="event.times" placeholder="hr mm/ am/pm">
+                            </div>
+                            <br />
+                            <br />
+                            <form action="action_page.php">
+                              <h4>Number of Players :</h4>                              
+                              <input type="number" ng-model="event.numPlayers" min="0" max="10000">
+                            </form>
+                            <h4>Comment:</h4> <textarea ng-model="event.comment"></textarea> 
+                          </form>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary" ng-click="createEvent(event)" data-dismiss="modal">Save changes</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
           </div>
-
 
 
           <!-- Friends pane -->  
@@ -175,13 +209,13 @@
               </form>
               <ul>
               <p ng-show="!sitesResults.length" class="empty-list">No Events</p>
-                <li ng-repeat="site in sitesResults | filter: event as results" class="site-list-elm" ng-show="site.events.length">
+                <li ng-repeat="site in sitesResults | filter: event as results" class="site-list-elm" ng-show="site.events.length" >
                   <ul>
-                    <li ng-repeat="events in site.events" ng-hide="location">
+                    <li ng-repeat="events in site.events" ng-show="!location">
                       <h2> Location: {{ events.place }} </h2>
                       <p> Sport: {{ events.sport }} </p>
                       <p> Number of Players: {{ events.numPlayers }} </p>
-                      <p> Time: {{ events.time }} </p>
+                      <p> Time: {{ events.time | date:'shortTime' }} </p>
                       <p> Comment: {{ events.comment}} </p>
                   </li>
                   </ul>
@@ -222,4 +256,3 @@
 </script>
 
 <!-- comment -->
->>>>>>> Tesint

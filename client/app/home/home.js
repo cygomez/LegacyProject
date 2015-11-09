@@ -299,9 +299,11 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
           $http.post('/siteinfo', place)  // post site info to server
             .then(function successCallback(response) {
               console.log('Events', response.data);
+              
               place.checkins = response.data.checkins;
               $scope.sitesResults[index].reviews = response.data.siteReviews;
               $scope.sitesResults[index].events = response.data.events;
+
               console.log('Events in siteResults: ', $scope.sitesResults);
             }, function errorCallback(response) {
               console.error('database post error: ', error);
@@ -313,28 +315,34 @@ angular.module('myApp.home', ['ngRoute', 'ngCookies'])
     }
   };
 
-  
+
+//Event Object
+$scope.mytime = null;
+
+  $scope.events = function(event) {
+        $scope.mytime = event;  
+  };
 
 // //Create an Event
-//TODO: fill in the proper values for keys
-  $scope.events = function(event) {
+  $scope.createEvent = function(event) {
     var container = {};
-    container.place_id = 0;//take from HTML elm.name or elm.site.place_id on line 90
-    container.sitename = "";//auto generate sitename;
-    container.events = 
-       {
-        sport: $scope.selectedSport,
-        numPlayers: event.numPlayers,
-        time: event.time,
-        place: "",
-        comment: event.comment
-      };
-
+    container.place_id = $scope.mytime.place_id;//take from HTML elm.name or elm.site.place_id on line 90
+    container.sitename = $scope.mytime.name;
+    container.events =
+         {
+          sport: $scope.selectedSport,
+          date: event.date,
+          numPlayers: event.numPlayers,
+          time: event.times,
+          place: $scope.mytime.name,
+          comment: event.comment
+        };
+ 
     $http.post('/eventinfo', container)
       .then(function successCallback(response) {
-        console.log("Reponse in $scope.event ", response);
+        console.log("Reponse in $scope.createEvent ", response);
       }, function errorCallback(error) {
-          console.error("There is no events in post eventinfo ", error);
+          console.error("Failed in post eventinfo ", error);
       });
 
   };
